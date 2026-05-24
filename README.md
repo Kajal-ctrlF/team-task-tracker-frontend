@@ -30,16 +30,59 @@
 
 ## 📸 Screenshots
 
-> _Screenshots will be added after final deployment review._
+> _Screenshots of the live application_
 
-| Page | Preview |
-|------|---------|
-| Login | _(coming soon)_ |
-| Signup | _(coming soon)_ |
-| Dashboard | _(coming soon)_ |
-| Projects | _(coming soon)_ |
-| Tasks | _(coming soon)_ |
-| Forgot Password / OTP | _(coming soon)_ |
+### 🔐 Authentication
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>Login Page</strong><br/><br/>
+      <img src="./screenshots/login.png" alt="Login Page" width="100%"/>
+    </td>
+    <td align="center" width="50%">
+      <strong>Signup Page</strong><br/><br/>
+      <img src="./screenshots/signup.png" alt="Signup Page" width="100%"/>
+    </td>
+  </tr>
+</table>
+
+### 📊 Dashboard
+
+<table>
+  <tr>
+    <td align="center" width="100%">
+      <strong>Dashboard — Stats, Activity & Recent Items</strong><br/><br/>
+      <img src="./screenshots/dashboard.png" alt="Dashboard" width="100%"/>
+    </td>
+  </tr>
+</table>
+
+### 📁 Projects & ✅ Tasks
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>Projects Page</strong><br/><br/>
+      <img src="./screenshots/projects.png" alt="Projects Page" width="100%"/>
+    </td>
+    <td align="center" width="50%">
+      <strong>Tasks Page</strong><br/><br/>
+      <img src="./screenshots/tasks.png" alt="Tasks Page" width="100%"/>
+    </td>
+  </tr>
+</table>
+
+### 🔑 Forgot Password / OTP Flow
+
+<table>
+  <tr>
+    <td align="center" width="100%">
+      <strong>OTP Verification</strong><br/><br/>
+      <img src="./screenshots/otp.png" alt="OTP Page" width="60%"/>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -118,16 +161,11 @@ This project was built as a machine test / internship project demonstrating full
 
 | Technology | Purpose |
 |-----------|---------|
-| Node.js | Server-side JavaScript runtime |
-| Express.js | Web framework for building REST APIs |
-| MongoDB Atlas | Cloud-hosted NoSQL database |
-| Mongoose | MongoDB schema and data modeling |
-| JSON Web Token (JWT) | User authentication and authorization |
-| bcryptjs | Secure password hashing |
-| Nodemailer | Sending OTP emails via Gmail |
-| express-validator | Request input validation |
-| dotenv | Managing environment variables |
-| CORS | Allowing cross-origin requests from frontend |
+| Node.js | Backend runtime |
+| Express.js | REST APIs |
+| MongoDB Atlas | Database |
+| JWT | Authentication |
+| Nodemailer | OTP emails |
 
 ### Frontend
 
