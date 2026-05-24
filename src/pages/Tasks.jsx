@@ -117,7 +117,7 @@ const Tasks = () => {
   const [editLoading, setEditLoading]     = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const { user } = useAuth();
+  const { user } = useAuth(); // eslint-disable-line no-unused-vars
 
   // ── Debounce search ────────────────────────────────────────────────────────
   // Wait 400ms after user stops typing before sending API request.
