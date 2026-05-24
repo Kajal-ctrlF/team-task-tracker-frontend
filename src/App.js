@@ -14,11 +14,14 @@ import PublicRoute    from "./components/routing/PublicRoute";
 import AppLayout from "./components/layout/AppLayout";
 
 // Pages
-import Login     from "./pages/Login";
-import Signup    from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
-import Projects  from "./pages/Projects";
-import Tasks     from "./pages/Tasks";
+import Login         from "./pages/Login";
+import Signup        from "./pages/Signup";
+import Dashboard     from "./pages/Dashboard";
+import Projects      from "./pages/Projects";
+import Tasks         from "./pages/Tasks";
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyOtp     from "./pages/VerifyOtp";
+import ResetPassword from "./pages/ResetPassword";
 
 // Global styles
 import "./styles/index.css";
@@ -54,8 +57,11 @@ const AnimatedRoutes = () => {
 
         {/* Public routes */}
         <Route element={<PublicRoute />}>
-          <Route path="/login"  element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/login"           element={<Login />} />
+          <Route path="/signup"          element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-otp"      element={<VerifyOtp />} />
+          <Route path="/reset-password"  element={<ResetPassword />} />
         </Route>
 
         {/* Protected routes */}

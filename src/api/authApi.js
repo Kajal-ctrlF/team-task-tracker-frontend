@@ -1,12 +1,5 @@
 import API from "./axios";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// AUTH API CALLS
-// ─────────────────────────────────────────────────────────────────────────────
-// Each function maps to one backend endpoint.
-// They return the axios promise — the caller handles .then/.catch or async/await.
-// ─────────────────────────────────────────────────────────────────────────────
-
 // POST /api/auth/register
 export const registerUser = (data) => API.post("/auth/register", data);
 
@@ -18,3 +11,12 @@ export const getMe = () => API.get("/auth/me");
 
 // PUT /api/auth/me
 export const updateProfile = (data) => API.put("/auth/me", data);
+
+// POST /api/auth/forgot-password
+export const forgotPasswordApi = (data) => API.post("/auth/forgot-password", data);
+
+// POST /api/auth/verify-otp
+export const verifyOtpApi = (data) => API.post("/auth/verify-otp", data);
+
+// POST /api/auth/reset-password
+export const resetPasswordApi = (data) => API.post("/auth/reset-password", data);

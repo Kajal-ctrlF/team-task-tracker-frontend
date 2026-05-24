@@ -90,7 +90,12 @@ const Login = () => {
 
           {/* Password */}
           <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
+            <div className="form-label-row">
+              <label htmlFor="password" className="form-label">Password</label>
+              <Link to="/forgot-password" className="auth-card__link" style={{ fontSize: "0.8125rem" }}>
+                Forgot Password?
+              </Link>
+            </div>
             <div className="input-wrapper">
               <input
                 id="password"

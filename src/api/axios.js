@@ -1,17 +1,5 @@
 import axios from "axios";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// AXIOS INSTANCE
-// ─────────────────────────────────────────────────────────────────────────────
-// Instead of writing the full URL in every API call, we create one configured
-// axios instance. All API calls in the app use this instance.
-//
-// Benefits:
-//   - Base URL is set once — change it in one place for all calls
-//   - Request interceptor auto-attaches the JWT token to every request
-//   - Response interceptor handles 401 (token expired) globally
-// ─────────────────────────────────────────────────────────────────────────────
-
 const API = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
   headers: {
@@ -20,14 +8,7 @@ const API = axios.create({
 });
 
 // ── REQUEST INTERCEPTOR ───────────────────────────────────────────────────────
-// Runs before EVERY request is sent.
-// Reads the token from localStorage and adds it to the Authorization header.
-// This means you never have to manually add the token in any API call.
-//
-// Without interceptor: axios.get("/tasks", { headers: { Authorization: `Bearer ${token}` } })
-// With interceptor:    API.get("/tasks")  ← token is added automatically
-// ─────────────────────────────────────────────────────────────────────────────
-
+// Auto-attach JWT token to every request
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -40,21 +21,38 @@ API.interceptors.request.use(
 );
 
 // ── RESPONSE INTERCEPTOR ──────────────────────────────────────────────────────
-// Runs after EVERY response is received.
-// If the server returns 401 (token expired or invalid), we:
-//   1. Clear the stored token and user data
-//   2. Redirect to login page
-// This handles session expiry automatically across the whole app.
+// Handle 401 errors — BUT only redirect if:
+//   1. User has a token stored (they were logged in)
+//   2. The request was NOT to an auth endpoint (login/register/forgot-password etc.)
+//
+// This prevents the login page from redirecting to itself when
+// the user enters wrong credentials (which also returns 401).
 // ─────────────────────────────────────────────────────────────────────────────
 
 API.interceptors.response.use(
-  (response) => response, // success — just pass through
+  (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthEndpoint =
+      error.config?.url?.includes("/auth/login") ||
+      error.config?.url?.includes("/auth/register") ||
+      error.config?.url?.includes("/auth/forgot-password") ||
+      error.config?.url?.includes("/auth/verify-otp") ||
+      error.config?.url?.includes("/auth/reset-password");
+
+    // Only auto-redirect if:
+    // - Status is 401
+    // - NOT an auth endpoint (login failure should NOT redirect)
+    // - User has a token (meaning session expired, not wrong password)
+    if (
+      error.response?.status === 401 &&
+      !isAuthEndpoint &&
+      localStorage.getItem("token")
+    ) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      window.location.href = "/login"; // force redirect to login
+      window.location.href = "/login";
     }
+
     return Promise.reject(error);
   }
 );
