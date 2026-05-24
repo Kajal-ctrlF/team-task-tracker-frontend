@@ -60,23 +60,36 @@
 /* ── Stat Cards Grid ───────────────────────────────────────────────────────── */
 .stat-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--space-md);
+}
+
+@media (max-width: 1100px) {
+  .stat-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .stat-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ── Stat Card ─────────────────────────────────────────────────────────────── */
 .stat-card {
   background: var(--color-surface);
   border-radius: var(--radius-md);
-  padding: var(--space-lg);
+  padding: var(--space-md);
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border);
   transition: box-shadow var(--transition), transform var(--transition);
   position: relative;
   overflow: hidden;
+  min-width: 0; /* prevents overflow */
 }
 
 .stat-card--clickable {
@@ -106,9 +119,9 @@
 
 /* Icon wrapper — colored circle */
 .stat-card__icon-wrap {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-md);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -124,7 +137,7 @@
 .stat-card__body { flex: 1; min-width: 0; }
 
 .stat-card__value {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--color-text);
   line-height: 1;
@@ -134,16 +147,22 @@
 .stat-card__dash { color: var(--color-text-muted); }
 
 .stat-card__label {
-  font-size: 0.8125rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-text);
   margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-card__subtitle {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--color-text-muted);
   margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-card__arrow {

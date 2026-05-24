@@ -442,7 +442,7 @@ const Dashboard = () => {
           icon={<MdAssignment size={26} />}
           color="blue"
           to="/tasks"
-          subtitle="All your tasks"
+          subtitle="All tasks"
           tooltip="Total number of tasks you created or are assigned to"
         />
         <StatCard
@@ -451,7 +451,7 @@ const Dashboard = () => {
           icon={<MdCheckCircle size={26} />}
           color="green"
           to="/tasks"
-          subtitle="Status: done"
+          subtitle="Done"
           tooltip="Tasks marked as Done"
         />
         <StatCard
@@ -460,7 +460,7 @@ const Dashboard = () => {
           icon={<MdPending size={26} />}
           color="yellow"
           to="/tasks"
-          subtitle="Not yet done"
+          subtitle="Not done"
           tooltip="Tasks that are Todo, In Progress, or In Review"
         />
         <StatCard
@@ -469,7 +469,7 @@ const Dashboard = () => {
           icon={<MdWarning size={26} />}
           color="red"
           to="/tasks"
-          subtitle="Past due date"
+          subtitle="Past due"
           tooltip="Tasks whose due date has passed and are not yet completed"
         />
         <StatCard
@@ -478,7 +478,7 @@ const Dashboard = () => {
           icon={<MdFolder size={26} />}
           color="purple"
           to="/projects"
-          subtitle="Active & completed"
+          subtitle="Total"
           tooltip="Total projects you own or are a member of"
         />
       </div>
