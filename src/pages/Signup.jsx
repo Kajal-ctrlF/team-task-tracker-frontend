@@ -120,7 +120,7 @@ const Signup = () => {
             <input
               id="name" type="text" name="name"
               className={`form-input ${errors.name ? "form-input--error" : ""}`}
-              placeholder="Kajal Patel"
+              placeholder="Enter your full name"
               value={formData.name}
               onChange={handleChange}
               autoComplete="name"
