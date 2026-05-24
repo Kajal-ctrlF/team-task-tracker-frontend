@@ -5,6 +5,7 @@ const API = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 60000, // 60 seconds — handles Render free tier cold start delay
 });
 
 // ── REQUEST INTERCEPTOR ───────────────────────────────────────────────────────
