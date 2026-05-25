@@ -84,7 +84,27 @@
 
 ---
 
-## 📌 Project Overview
+## 🎥 Project Walkthrough
+
+A complete walkthrough of the Team Task Tracker application:
+
+- Authentication flow (Login / Signup / OTP Reset)
+- Dashboard analytics
+- Project management
+- Task CRUD operations
+- Status tracking system
+
+[Watch Demo Video](https://drive.google.com/file/d/1LBjWYLDPmNKqau6PFbryvMYDITdemgMk/view?usp=sharing)
+
+---
+
+## 🎬 Demo Video
+
+▶️ **[Watch Full Demo on Google Drive](https://drive.google.com/file/d/1LBjWYLDPmNKqau6PFbryvMYDITdemgMk/view?usp=sharing)**
+
+> Walkthrough covers: Registration → Login → Create Project → Create Task → Dashboard Stats → Forgot Password OTP Flow → Dark Mode
+
+---
 
 **Team Task Tracker** is a production-ready MERN stack web application that enables teams to manage projects and tasks efficiently. It features a clean, responsive UI with dark/light mode, real-time dashboard statistics, and a complete authentication system including OTP-based password reset via email.
 
