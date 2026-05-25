@@ -84,21 +84,7 @@
 
 ---
 
-## 🎥 Project Walkthrough
-
-A complete walkthrough of the Team Task Tracker application:
-
-- Authentication flow (Login / Signup / OTP Reset)
-- Dashboard analytics
-- Project management
-- Task CRUD operations
-- Status tracking system
-
-[Watch Demo Video](https://drive.google.com/file/d/1LBjWYLDPmNKqau6PFbryvMYDITdemgMk/view?usp=sharing)
-
----
-
-## 🎬 Demo Video
+## � Demo Video
 
 ▶️ **[Watch Full Demo on Google Drive](https://drive.google.com/file/d/1LBjWYLDPmNKqau6PFbryvMYDITdemgMk/view?usp=sharing)**
 
