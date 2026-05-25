@@ -30,8 +30,6 @@
 
 ## 📸 Screenshots
 
-> _Screenshots of the live application_
-
 ### 🔐 Authentication
 
 <table>
@@ -86,14 +84,6 @@
 
 ---
 
-## 🎬 Demo Video
-
-> _A walkthrough demo video will be added here._
->
-> Topics covered: Registration → Login → Create Project → Create Task → Dashboard Stats → Forgot Password OTP Flow → Dark Mode
-
----
-
 ## 📌 Project Overview
 
 **Team Task Tracker** is a production-ready MERN stack web application that enables teams to manage projects and tasks efficiently. It features a clean, responsive UI with dark/light mode, real-time dashboard statistics, and a complete authentication system including OTP-based password reset via email.
@@ -107,7 +97,7 @@ This project was built as a machine test / internship project demonstrating full
 ### 🔐 Authentication
 - User registration with field-level inline validation
 - JWT-based login with token expiry handling
-- Forgot Password with 6-digit OTP via email (Nodemailer + Gmail)
+- Forgot Password with 6-digit OTP via email (Brevo API)
 - OTP expiry in 10 minutes with countdown timer on frontend
 - OTP hashed with bcrypt before storing in DB
 - Secure password reset with `resetOtpVerified` gate
@@ -146,12 +136,11 @@ This project was built as a machine test / internship project demonstrating full
 ### 🎨 UI/UX
 - Dark / Light mode toggle (saved in localStorage)
 - Responsive design (mobile + desktop)
-- Smooth page transitions (Framer Motion + AnimatePresence)
-- Toast notifications (react-hot-toast)
-- Hover tooltips on dashboard stat cards
+- Smooth page transitions (Framer Motion)
+- Toast notifications
 - Password strength indicator on signup
 - OTP input boxes with auto-focus and paste support
-- Confirm dialog for destructive actions (no `window.confirm`)
+- Confirm dialog for destructive actions
 
 ---
 
@@ -161,11 +150,16 @@ This project was built as a machine test / internship project demonstrating full
 
 | Technology | Purpose |
 |-----------|---------|
-| Node.js | Backend runtime |
-| Express.js | REST APIs |
-| MongoDB Atlas | Database |
-| JWT | Authentication |
-| Nodemailer | OTP emails |
+| Node.js | Server-side JavaScript runtime |
+| Express.js | Web framework for building REST APIs |
+| MongoDB Atlas | Cloud-hosted NoSQL database |
+| Mongoose | MongoDB schema and data modeling |
+| JSON Web Token (JWT) | User authentication and authorization |
+| bcryptjs | Secure password and OTP hashing |
+| Brevo (sib-api-v3-sdk) | Sending OTP emails via HTTP API |
+| express-validator | Request input validation |
+| dotenv | Managing environment variables |
+| CORS | Allowing cross-origin requests from frontend |
 
 ### Frontend
 
@@ -186,7 +180,7 @@ This project was built as a machine test / internship project demonstrating full
 | MongoDB Atlas | Cloud database hosting |
 | Render | Backend deployment |
 | Vercel | Frontend deployment |
-| GitHub | Version control and source code hosting |
+| GitHub | Version control |
 
 ---
 
@@ -196,18 +190,16 @@ This project was built as a machine test / internship project demonstrating full
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 - MongoDB Atlas account (free tier)
-- Gmail account with App Password enabled
+- Brevo account (free tier) for OTP emails
 
 ### 1. Clone the repositories
 
 ```bash
 # Backend
 git clone https://github.com/Kajal-ctrlF/team-task-tracker-backend.git
-cd team-task-tracker-backend
 
-# Frontend (separate terminal)
+# Frontend
 git clone https://github.com/Kajal-ctrlF/team-task-tracker-frontend.git
-cd team-task-tracker-frontend
 ```
 
 ### 2. Backend Setup
@@ -226,8 +218,8 @@ MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/team-ta
 JWT_SECRET=your_super_secret_jwt_key
 JWT_EXPIRE=7d
 CLIENT_URL=http://localhost:3000
-EMAIL_USER=your_gmail@gmail.com
-EMAIL_PASS=your_16_char_app_password
+BREVO_API_KEY=your_brevo_api_key
+EMAIL_FROM=your_email@gmail.com
 ```
 
 ```bash
@@ -267,16 +259,16 @@ npm start
 | `MONGO_URI` | MongoDB Atlas connection string | Yes |
 | `JWT_SECRET` | Secret key for signing JWT tokens | Yes |
 | `JWT_EXPIRE` | Token expiry (e.g. `7d`) | Yes |
-| `CLIENT_URL` | Frontend URL for CORS whitelist | Yes |
-| `EMAIL_USER` | Gmail address used to send OTPs | Yes |
-| `EMAIL_PASS` | Gmail App Password (16 characters) | Yes |
+| `CLIENT_URL` | Frontend URL for CORS | Yes |
+| `BREVO_API_KEY` | Brevo API key for sending OTP emails | Yes |
+| `EMAIL_FROM` | Sender email address | Yes |
 
 ### Frontend
 
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `REACT_APP_API_URL` | Backend API base URL | Yes |
-| `CI` | Set to `false` to prevent ESLint warnings from failing build | Yes |
+| `CI` | Set to `false` to prevent build failures | Yes |
 
 ---
 
@@ -288,7 +280,7 @@ Local:      http://localhost:5000/api
 Production: https://team-task-tracker-backend-9ugk.onrender.com/api
 ```
 
-All private routes require the header:
+All private routes require:
 ```
 Authorization: Bearer <jwt_token>
 ```
@@ -300,7 +292,7 @@ Authorization: Bearer <jwt_token>
 | `POST` | `/auth/register` | Public | Register new user |
 | `POST` | `/auth/login` | Public | Login, returns JWT |
 | `GET` | `/auth/me` | Private | Get current user profile |
-| `PUT` | `/auth/me` | Private | Update name / avatar |
+| `PUT` | `/auth/me` | Private | Update profile |
 | `POST` | `/auth/forgot-password` | Public | Send 6-digit OTP to email |
 | `POST` | `/auth/verify-otp` | Public | Verify OTP code |
 | `POST` | `/auth/reset-password` | Public | Set new password after OTP verified |
@@ -309,7 +301,7 @@ Authorization: Bearer <jwt_token>
 
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
-| `GET` | `/projects` | Private | List projects (supports `?search=` `?status=`) |
+| `GET` | `/projects` | Private | List projects (`?search=` `?status=`) |
 | `POST` | `/projects` | Private | Create project |
 | `GET` | `/projects/:id` | Private | Get single project |
 | `PUT` | `/projects/:id` | Private (owner) | Update project |
@@ -319,11 +311,11 @@ Authorization: Bearer <jwt_token>
 
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
-| `GET` | `/tasks` | Private | List tasks (supports `?status=` `?priority=` `?projectId=` `?search=` `?page=` `?limit=`) |
+| `GET` | `/tasks` | Private | List tasks (`?status=` `?priority=` `?projectId=` `?search=` `?page=` `?limit=`) |
 | `POST` | `/tasks` | Private | Create task |
 | `GET` | `/tasks/:id` | Private | Get single task |
-| `PUT` | `/tasks/:id` | Private | Update task fields |
-| `PATCH` | `/tasks/:id/status` | Private | Update task status only |
+| `PUT` | `/tasks/:id` | Private | Update task |
+| `PATCH` | `/tasks/:id/status` | Private | Update status only |
 | `DELETE` | `/tasks/:id` | Private | Delete task |
 
 ### Dashboard
@@ -331,8 +323,8 @@ Authorization: Bearer <jwt_token>
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
 | `GET` | `/dashboard` | Private | Summary stats, breakdowns, recent items |
-| `GET` | `/dashboard/activity` | Private | 7-day task creation/completion data |
-| `GET` | `/dashboard/overdue` | Private | Overdue tasks with `daysOverdue` field |
+| `GET` | `/dashboard/activity` | Private | 7-day activity data |
+| `GET` | `/dashboard/overdue` | Private | Overdue tasks with `daysOverdue` |
 
 ---
 
@@ -394,7 +386,7 @@ Authorization: Bearer <jwt_token>
 </details>
 
 <details>
-<summary><strong>POST /tasks (Create Task)</strong></summary>
+<summary><strong>POST /tasks</strong></summary>
 
 **Request:**
 ```json
@@ -417,9 +409,8 @@ Authorization: Bearer <jwt_token>
     "title": "Fix login bug",
     "status": "todo",
     "priority": "high",
-    "dueDate": "2025-06-30T00:00:00.000Z",
-    "project": { "_id": "64proj123...", "title": "Website Redesign" },
-    "createdBy": { "name": "Kajal Patel", "email": "kajal@example.com" }
+    "project": { "title": "Website Redesign" },
+    "createdBy": { "name": "Kajal Patel" }
   }
 }
 ```
@@ -434,16 +425,13 @@ LOGIN / REGISTER
   Client → POST /auth/login (email + password)
          → Server verifies credentials
          → JWT generated (expires: 7 days)
-         → Token returned to client
-         → Stored in localStorage
-         → Attached to every request: Authorization: Bearer <token>
+         → Token stored in localStorage
+         → Sent with every request: Authorization: Bearer <token>
 
 PROTECTED ROUTE
-  Request → protect middleware
-          → jwt.verify(token, JWT_SECRET)
-          → Decode user ID from payload
-          → Fetch user from DB → attach to req.user
-          → Controller runs
+  Request → protect middleware → jwt.verify(token)
+          → Decode user ID → fetch user from DB
+          → Attach to req.user → controller runs
 ```
 
 ---
@@ -453,21 +441,19 @@ PROTECTED ROUTE
 ```
 Step 1 — POST /auth/forgot-password  { email }
   → Generate 6-digit OTP
-  → Hash OTP with bcrypt (never stored as plain text)
-  → Save hash + expiry (now + 10 min) to User document
-  → Send plain OTP to user's email via Nodemailer
+  → Hash OTP with bcrypt
+  → Save hash + expiry (10 min) to DB
+  → Send OTP via Brevo email API
 
 Step 2 — POST /auth/verify-otp  { email, otp }
-  → Find user by email
-  → Check OTP not expired (resetOtpExpiry > now)
-  → bcrypt.compare(entered OTP, stored hash)
-  → If valid → set resetOtpVerified = true in DB
+  → Check OTP not expired
+  → bcrypt.compare(entered, stored hash)
+  → If valid → set resetOtpVerified = true
 
 Step 3 — POST /auth/reset-password  { email, newPassword }
-  → Check resetOtpVerified === true  ← security gate
-  → Update password (pre-save hook hashes it automatically)
-  → Clear resetOtp, resetOtpExpiry, resetOtpVerified from DB
-  → User logs in with new password
+  → Check resetOtpVerified === true
+  → Update password (auto-hashed by pre-save hook)
+  → Clear all OTP fields from DB
 ```
 
 ---
@@ -480,17 +466,16 @@ Step 3 — POST /auth/reset-password  { email, newPassword }
 | 2 | Register with existing email | `400` — "Account already exists with this email" |
 | 3 | Login with correct credentials | `200` — JWT token returned |
 | 4 | Login with wrong password | `401` — "Invalid email or password" |
-| 5 | Access protected route without token | `401` — "Access denied. Please log in" |
-| 6 | Access protected route with expired token | `401` — "Your session has expired" |
-| 7 | Create project with valid data | `201` — project created |
-| 8 | Create task without selecting a project | `422` — "Project ID is required" |
-| 9 | Delete project (non-owner) | `403` — "Only the project owner can delete it" |
-| 10 | Send OTP to unregistered email | `200` — generic message (prevents enumeration) |
-| 11 | Submit wrong OTP | `400` — "Incorrect OTP" |
-| 12 | Submit expired OTP | `400` — "OTP has expired" |
-| 13 | Reset password without verifying OTP | `403` — "Please verify your OTP first" |
-| 14 | Filter tasks by status=done | `200` — only completed tasks returned |
-| 15 | Dashboard with no tasks | `200` — all counts return 0 |
+| 5 | Access protected route without token | `401` — "Access denied" |
+| 6 | Create project with valid data | `201` — project created |
+| 7 | Create task without project | `422` — "Project ID is required" |
+| 8 | Delete project (non-owner) | `403` — "Only the project owner can delete it" |
+| 9 | Send OTP to unregistered email | `200` — generic message (prevents enumeration) |
+| 10 | Submit wrong OTP | `400` — "Incorrect OTP" |
+| 11 | Submit expired OTP | `400` — "OTP has expired" |
+| 12 | Reset password without OTP | `403` — "Please verify your OTP first" |
+| 13 | Filter tasks by status=done | `200` — only completed tasks |
+| 14 | Dashboard with no tasks | `200` — all counts return 0 |
 
 ---
 
@@ -501,43 +486,42 @@ team-task-tracker/
 ├── backend/
 │   ├── config/db.js
 │   ├── controllers/
-│   │   ├── authController.js       # Register, Login, OTP flow
-│   │   ├── projectController.js    # Projects CRUD
-│   │   ├── taskController.js       # Tasks CRUD + filters
-│   │   └── dashboardController.js  # Stats + aggregation pipelines
+│   │   ├── authController.js
+│   │   ├── projectController.js
+│   │   ├── taskController.js
+│   │   └── dashboardController.js
 │   ├── middleware/
-│   │   ├── authMiddleware.js       # JWT protect + adminOnly
-│   │   ├── errorMiddleware.js      # Global error handler
-│   │   └── validate.js             # express-validator rules
+│   │   ├── authMiddleware.js
+│   │   ├── errorMiddleware.js
+│   │   └── validate.js
 │   ├── models/
-│   │   ├── User.js                 # Schema + OTP fields + bcrypt hook
-│   │   ├── Project.js              # Schema + virtual tasks field
-│   │   └── Task.js                 # Schema + text indexes
+│   │   ├── User.js
+│   │   ├── Project.js
+│   │   └── Task.js
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   ├── projectRoutes.js
 │   │   ├── taskRoutes.js
 │   │   └── dashboardRoutes.js
 │   ├── utils/
-│   │   ├── generateToken.js        # JWT factory
-│   │   └── sendEmail.js            # Nodemailer + HTML email template
+│   │   ├── generateToken.js
+│   │   └── sendEmail.js
 │   ├── server.js
 │   └── package.json
 │
 └── frontend/
+    ├── screenshots/
     ├── src/
-    │   ├── api/                    # axios.js + 4 API modules
+    │   ├── api/
     │   ├── components/
-    │   │   ├── common/             # ConfirmDialog, PageTransition
-    │   │   ├── layout/             # AppLayout, Navbar, Sidebar
-    │   │   ├── projects/           # ProjectCard, ProjectForm
-    │   │   ├── routing/            # ProtectedRoute, PublicRoute
-    │   │   └── tasks/              # TaskCard, TaskForm, TaskTable
-    │   ├── context/                # AuthContext, ThemeContext
-    │   ├── pages/                  # 8 pages including OTP flow
-    │   ├── styles/                 # 8 CSS files + dark mode variables
-    │   ├── App.js
-    │   └── index.js
+    │   │   ├── common/
+    │   │   ├── layout/
+    │   │   ├── projects/
+    │   │   ├── routing/
+    │   │   └── tasks/
+    │   ├── context/
+    │   ├── pages/
+    │   └── styles/
     ├── vercel.json
     └── package.json
 ```
@@ -551,27 +535,23 @@ team-task-tracker/
 1. Push backend to GitHub
 2. Go to [render.com](https://render.com) → **New Web Service**
 3. Connect the backend repository
-4. Configure:
-   - **Build Command:** `npm install`
-   - **Start Command:** `node server.js`
-5. Add all environment variables from the table above
-6. Deploy — live in ~3 minutes
+4. Set **Build Command:** `npm install` and **Start Command:** `node server.js`
+5. Add all environment variables
+6. Deploy
 
 ### Frontend → Vercel
 
 1. Push frontend to GitHub
 2. Go to [vercel.com](https://vercel.com) → **New Project**
 3. Import the frontend repository
-4. Framework: **Create React App** (auto-detected)
-5. Add environment variables: `REACT_APP_API_URL` and `CI=false`
-6. Deploy — live in ~2 minutes
+4. Add `REACT_APP_API_URL` and `CI=false` in environment variables
+5. Deploy
 
 ### Database → MongoDB Atlas
 
 1. Create free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas)
-2. Create a database user
-3. Allow all IPs: `0.0.0.0/0` in Network Access
-4. Copy the connection string into `MONGO_URI`
+2. Create database user and allow all IPs (`0.0.0.0/0`)
+3. Copy connection string into `MONGO_URI`
 
 ---
 
@@ -584,7 +564,6 @@ team-task-tracker/
 - [ ] Export tasks to CSV
 - [ ] Google OAuth login
 - [ ] Calendar view for deadlines
-- [ ] Email notifications for task assignments
 
 ---
 
